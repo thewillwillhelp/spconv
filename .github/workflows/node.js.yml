@@ -30,6 +30,7 @@ jobs:
       run: |
         npm install
         npm run build:prod --if-present
+        rm -r app
         mv dist app
         ls -l
         git status
