@@ -31,9 +31,13 @@ jobs:
         npm install
         npm run build:prod --if-present
         mv dist app
+        ls -l
+        git status
 
     - name: Set git config and add changes
       run: |
+          ls -l
+          git status
           git config --global user.email "${GITHUB_ACTOR}@https://users.noreply.github.com/"
           git config --global user.name "${GITHUB_ACTOR}"
           git add --all
