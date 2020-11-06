@@ -19,7 +19,7 @@ export function ResultBoard() {
         const itemsInGroup = groupedTodoItems[spConfigItem.size]?.items.length || 0;
         const minTime = itemsInGroup * spConfigItem.minTime;
         const maxTime = itemsInGroup * spConfigItem.maxTime;
-        const averageTime = itemsInGroup * (spConfigItem.maxTime - spConfigItem.minTime) / 2;
+        const averageTime = itemsInGroup * (spConfigItem.maxTime + spConfigItem.minTime) / 2;
 
         return {
             min: minTime,
