@@ -1,4 +1,4 @@
-import {createStore} from 'redux';
+import {applyMiddleware, createStore} from 'redux';
 import {
     REDUX_ACTION_ADD_TODO_ITEM,
     REDUX_ACTION_ADD_SP_CONFIG_ITEM,
@@ -9,10 +9,22 @@ import {
 } from './actions';
 import {storyPointsConfigsList, todoItems} from './defaultData';
 
+const cachedApplicationData = getCachedApplicationData();
+
+function getCachedApplicationData() {
+    try {
+        const cachedApplicationData = JSON.parse(localStorage.getItem('spconv'));
+        return cachedApplicationData || {};
+    } catch (error) {
+        return {};
+    }
+}
+
 const defaultReduxStore = {
-    todoItems,
+    todoItems: cachedApplicationData.todoItems || todoItems,
     storyPointsConfigs: {
-        list: storyPointsConfigsList,
+        ...cachedApplicationData.storyPointsConfigs,
+        list: cachedApplicationData?.storyPointsConfigs?.list || storyPointsConfigsList,
     },
 };
 
@@ -89,4 +101,19 @@ function mainReducer(reduxStore = defaultReduxStore, action) {
     }
 }
 
-export const store = createStore(mainReducer);
+
+const saveToLocalStorage = (reduxStore) => (next) => (action) => {
+    const result = next(action);
+    const currentStateOfReduxStore = reduxStore.getState();
+
+    const applicationData = {
+        todoItems: currentStateOfReduxStore.todoItems,
+        storyPointsConfig: currentStateOfReduxStore.storyPointsConfigs,
+    };
+
+    localStorage.setItem('spconv', JSON.stringify(applicationData));
+
+    return result;
+};
+
+export const store = createStore(mainReducer, applyMiddleware(saveToLocalStorage));
