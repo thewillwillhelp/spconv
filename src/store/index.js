@@ -30,7 +30,7 @@ function getCachedApplicationData() {
 function getDefaultReduxStore() {
     const cachedApplicationData = getCachedApplicationData();
 
-    if (cachedApplicationData?.todoItems.length > 0) {
+    if (cachedApplicationData?.todoItems?.length > 0) {
         let lastTodoIndex = 0;
         cachedApplicationData?.todoItems.forEach((todoItem) => {
             const itemIndex = parseInt(todoItem.id);
